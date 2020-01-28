@@ -104,21 +104,13 @@
 
     <TextView
         android:id="@+id/tv_currently_infected_countries"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_weight="0.01"
+        style="@style/style_details"
         android:gravity="start"
-        android:text="@string/currently_infected_countries_not_loaded"
-        android:textColor="#AFAFAF"
-        android:textSize="8sp" />
+        android:text="@string/currently_infected_countries_not_loaded" />
 
     <TextView
         android:id="@+id/tv_last_updated"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_weight="0.01"
+        style="@style/style_details"
         android:gravity="center"
-        android:text="@string/data_not_yet_fetched"
-        android:textColor="#AFAFAF"
-        android:textSize="8sp" />
+        android:text="@string/data_not_yet_fetched" />
 </LinearLayout>
