@@ -13,12 +13,12 @@ interface QQWuhanCoronavirusService {
     fun getWuweiWWGlobalVars(): Call<WuweiWWGlobalVars>
 
     companion object {
-        val retrofit: Retrofit = Retrofit.Builder()
+        private val retrofit: Retrofit = Retrofit.Builder()
             .baseUrl("https://view.inews.qq.com/")
             .addConverterFactory(GsonConverterFactory.create())
             .build()
 
-        val instance by lazy {
+        val instance: QQWuhanCoronavirusService by lazy {
             retrofit.create(QQWuhanCoronavirusService::class.java)
         }
     }

@@ -8,8 +8,32 @@ data class WuweiWWAreaCountsResponse(
     val data: String = ""
 ) {
     @delegate:Transient
-    val stats: List<Stats> by lazy {
-        gson.fromJson(data, Array<Stats>::class.java).toList()
+    val stats: List<AreaStats> by lazy {
+        gson.fromJson(data, Array<AreaStats>::class.java).toList()
+    }
+
+    @delegate:Transient
+    val countryStats: List<CountryStats> by lazy {
+        stats.groupingBy {
+            it.country
+        }.fold({ _, _ ->
+            Stats()
+        }, { _, countryStats, stats ->
+            countryStats.apply {
+                confirm += stats.confirm
+                suspect += stats.suspect
+                dead += stats.dead
+                heal += stats.heal
+            }
+        }).map {
+            CountryStats(
+                it.key,
+                it.value.confirm,
+                it.value.suspect,
+                it.value.dead,
+                it.value.heal
+            )
+        }
     }
 
     @delegate:Transient
@@ -29,7 +53,7 @@ data class WuweiWWAreaCountsResponse(
         val gson: Gson = Gson()
     }
 
-    data class Stats(
+    data class AreaStats(
         val country: String,
         val area: String,
         val city: String,
@@ -44,5 +68,20 @@ data class WuweiWWAreaCountsResponse(
         var suspect: Int,
         var dead: Int,
         var heal: Int
+    )
+
+    data class Stats(
+        var confirm: Int = 0,
+        var suspect: Int = 0,
+        var dead: Int = 0,
+        var heal: Int = 0
+    )
+
+    data class CountryStats(
+        val country: String,
+        val confirm: Int = 0,
+        val suspect: Int = 0,
+        val dead: Int = 0,
+        val heal: Int = 0
     )
 }

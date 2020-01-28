@@ -10,7 +10,7 @@
     <string name="question_mark">\?</string>
 
     <string name="last_updated_at">Last updated at %1$s (click to refresh)</string>
-    <string name="error_occured">An error occurred… (click to refresh)</string>
+    <string name="error_occurred">An error occurred… (click to refresh)</string>
     <string name="data_not_yet_fetched">Data not yet fetched</string>
 
     <string name="currently_infected_countries">Currently infected countries: %1$s</string>
@@ -18,5 +18,6 @@
     <string name="currently_infected_countries_updating">Updating currently infected countries…</string>
     <string name="currently_infected_countries_not_loaded">Currently infected countries not loaded</string>
 
+    <string name="currently_infected_country_detail">%1$s (%2$d)</string>
     <string name="updating">Updating…</string>
 </resources>

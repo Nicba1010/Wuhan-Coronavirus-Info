@@ -36,7 +36,7 @@ class CoronavirusInfoWidgetProvider : AppWidgetProvider() {
                 PendingIntent.FLAG_UPDATE_CURRENT
             )
 
-            val views: RemoteViews = RemoteViews(
+            val views = RemoteViews(
                 context.packageName,
                 R.layout.coronavirus_info_appwidget
             )
@@ -59,7 +59,7 @@ class CoronavirusInfoWidgetProvider : AppWidgetProvider() {
                     override fun onFailure(call: Call<WuweiWWAreaCountsResponse>, t: Throwable) {
                         views.setTextViewText(
                             R.id.tv_last_updated,
-                            "An error occurred... (click to refresh)"
+                            context.getString(R.string.error_occurred)
                         )
                         views.setTextViewText(
                             R.id.tv_currently_infected_countries,
@@ -102,41 +102,39 @@ class CoronavirusInfoWidgetProvider : AppWidgetProvider() {
                         call: Call<WuweiWWAreaCountsResponse>,
                         response: Response<WuweiWWAreaCountsResponse>
                     ) {
-                        response.body()?.stats?.let { statsList ->
+                        response.body()?.let { areaCountsResponse ->
                             views.setTextViewText(
                                 R.id.tv_confirmed_cases,
-                                statsList.sumBy { it.confirm }.toString()
+                                areaCountsResponse.globalStats.confirm.toString()
                             )
 //                            views.setTextViewText(
 //                                R.id.tv_suspected_cases,
-//                                statsList.sumBy { it.suspect }.toString()
+//                                areaCountsResponse.globalStats.suspect.toString()
 //                            )
                             // TODO: If they fix API reenable this
                             views.setTextViewText(
                                 R.id.tv_deaths,
-                                statsList.sumBy { it.dead }.toString()
+                                areaCountsResponse.globalStats.dead.toString()
                             )
                             views.setTextViewText(
                                 R.id.tv_recoveries,
-                                statsList.sumBy { it.heal }.toString()
+                                areaCountsResponse.globalStats.heal.toString()
                             )
 
                             views.setTextViewText(
                                 R.id.tv_currently_infected_countries,
                                 context.getString(
                                     R.string.currently_infected_countries,
-                                    statsList.groupingBy {
-                                        it.country
-                                    }.fold(0) { accumulator, stats ->
-                                        accumulator + stats.confirm
-                                    }.filter {
-                                        it.value > 0
-                                    }.mapKeys {
-                                        chineseToDefaultCountryNameMap[it.key] ?: it.key
-                                    }.toList().sortedByDescending {
-                                        it.second
+                                    areaCountsResponse.countryStats.filter {
+                                        it.confirm > 0
+                                    }.sortedByDescending {
+                                        it.confirm
                                     }.joinToString(", ") {
-                                        "${it.first} (${it.second})"
+                                        context.getString(
+                                            R.string.currently_infected_country_detail,
+                                            chToLocalCountryMap[it.country] ?: it.country,
+                                            it.confirm
+                                        )
                                     }
                                 )
                             )
@@ -146,7 +144,7 @@ class CoronavirusInfoWidgetProvider : AppWidgetProvider() {
                             )
                         } ?: views.setTextViewText(
                             R.id.tv_last_updated,
-                            context.getString(R.string.error_occured)
+                            context.getString(R.string.error_occurred)
                         )
 
                         showProgressBars(
@@ -252,7 +250,7 @@ class CoronavirusInfoWidgetProvider : AppWidgetProvider() {
 
     companion object {
         @SuppressLint("ConstantLocale")
-        val chineseToDefaultCountryNameMap: Map<String, String> = Locale.getAvailableLocales().map {
+        val chToLocalCountryMap: Map<String, String> = Locale.getAvailableLocales().map {
             it.getDisplayCountry(Locale.SIMPLIFIED_CHINESE) to it.getDisplayCountry(Locale.getDefault())
         }.toMap()
     }
