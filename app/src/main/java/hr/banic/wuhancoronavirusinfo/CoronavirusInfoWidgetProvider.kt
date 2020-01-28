@@ -24,10 +24,6 @@ class CoronavirusInfoWidgetProvider : AppWidgetProvider() {
         appWidgetManager: AppWidgetManager,
         appWidgetIds: IntArray
     ) {
-        chineseToDefaultCountryNameMap.forEach {
-            Log.d(this.javaClass.toString(), it.key + " -> " + it.value)
-        }
-
         appWidgetIds.forEach { appWidgetId ->
             val intentSync = Intent(context, CoronavirusInfoWidgetProvider::class.java)
             intentSync.action = AppWidgetManager.ACTION_APPWIDGET_UPDATE
