@@ -1,32 +1,31 @@
 package hr.banic.wuhancoronavirusinfo
 
+import android.annotation.SuppressLint
 import android.app.PendingIntent
 import android.appwidget.AppWidgetManager
 import android.appwidget.AppWidgetProvider
 import android.content.Context
 import android.content.Intent
-import android.os.StrictMode
 import android.util.Log
 import android.widget.RemoteViews
-import android.widget.Toast
-import okhttp3.OkHttpClient
-import okhttp3.Request
-import org.jsoup.Jsoup
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 import java.text.SimpleDateFormat
 import java.util.*
 
 
 class CoronavirusInfoWidgetProvider : AppWidgetProvider() {
-    private val client = OkHttpClient()
+
 
     override fun onUpdate(
         context: Context,
         appWidgetManager: AppWidgetManager,
         appWidgetIds: IntArray
     ) {
-        val policy = StrictMode.ThreadPolicy.Builder().permitAll().build()
-
-        StrictMode.setThreadPolicy(policy)
+        chineseToDefaultCountryNameMap.forEach {
+            Log.d(this.javaClass.toString(), it.key + " -> " + it.value)
+        }
 
         appWidgetIds.forEach { appWidgetId ->
             val intentSync = Intent(context, CoronavirusInfoWidgetProvider::class.java)
@@ -46,34 +45,143 @@ class CoronavirusInfoWidgetProvider : AppWidgetProvider() {
             )
 
             views.setOnClickPendingIntent(R.id.ll_root, pendingRefreshIntent)
-            views.setTextViewText(R.id.tv_last_updated, "Updating...")
+            views.setTextViewText(
+                R.id.tv_last_updated,
+                "Updating..."
+            )
+            listOf(
+                R.id.tv_confirmed_cases,
+                R.id.tv_suspected_cases,
+                R.id.tv_deaths,
+                R.id.tv_recoveries
+            ).forEach {
+                views.setTextViewText(it, "?")
+            }
             appWidgetManager.updateAppWidget(appWidgetId, views)
 
-            val request: Request = Request.Builder()
-                .url(DATA_SOURCE)
-                .build()
+            QQWuhanCoronavirusService.instance
+                .getWuweiWWAreaCounts()
+                .enqueue(object : Callback<WuweiWWAreaCountsResponse> {
+                    override fun onFailure(call: Call<WuweiWWAreaCountsResponse>, t: Throwable) {
+                        views.setTextViewText(
+                            R.id.tv_last_updated,
+                            "An error occurred... (click to refresh)"
+                        )
 
-            val time = SimpleDateFormat("HH:mm:ss", Locale.getDefault()).format(Date());
-            client.newCall(request).execute().use { response ->
-                response.body?.string()?.let { data ->
-                    Jsoup.parse(data).let { soup ->
-                        val spans = soup.select(".content___2hIPS").select("span")
-                        views.setTextViewText(R.id.tv_confirmed_cases, spans[1].text())
-                        views.setTextViewText(R.id.tv_suspected_cases, spans[2].text())
-                        views.setTextViewText(R.id.tv_deaths, spans[3].text())
-                        views.setTextViewText(R.id.tv_recoveries, spans[4].text())
-                        views.setTextViewText(R.id.tv_last_updated, "Last updated at $time")
+                        listOf(
+                            R.id.tv_confirmed_cases,
+//                            R.id.tv_suspected_cases,
+                            // TODO: If they fix API reenable this
+                            R.id.tv_deaths,
+                            R.id.tv_recoveries
+                        ).forEach {
+                            views.setTextViewText(it, "Error")
+                        }
+                        appWidgetManager.updateAppWidget(appWidgetId, views)
+                        call.cancel()
+                    }
+
+                    override fun onResponse(
+                        call: Call<WuweiWWAreaCountsResponse>,
+                        response: Response<WuweiWWAreaCountsResponse>
+                    ) {
+                        response.body()?.stats?.let { statsList ->
+                            views.setTextViewText(
+                                R.id.tv_confirmed_cases,
+                                statsList.sumBy { it.confirm }.toString()
+                            )
+//                            views.setTextViewText(
+//                                R.id.tv_suspected_cases,
+//                                statsList.sumBy { it.suspect }.toString()
+//                            )
+                            // TODO: If they fix API reenable this
+                            views.setTextViewText(
+                                R.id.tv_deaths,
+                                statsList.sumBy { it.dead }.toString()
+                            )
+                            views.setTextViewText(
+                                R.id.tv_recoveries,
+                                statsList.sumBy { it.heal }.toString()
+                            )
+                            views.setTextViewText(
+                                R.id.tv_currently_infected_countries,
+                                "Currently infected countries: " + statsList.distinctBy { stats ->
+                                    stats.country
+                                }.map { stats ->
+                                    stats.country to statsList.filter {
+                                        it.country == stats.country
+                                    }.sumBy {
+                                        it.confirm
+                                    }
+                                }.filter {
+                                    it.second > 0
+                                }.sortedByDescending {
+                                    it.second
+                                }.joinToString(", ") {
+                                    (chineseToDefaultCountryNameMap[it.first] ?: it.first) +
+                                            " (${it.second})"
+                                }
+                            )
+                            views.setTextViewText(
+                                R.id.tv_last_updated,
+                                "Last updated at ${getLocalTime()} (click to refresh)"
+                            )
+                        } ?: views.setTextViewText(
+                            R.id.tv_last_updated,
+                            "An error occurred... (click to refresh)"
+                        )
+
                         appWidgetManager.updateAppWidget(appWidgetId, views)
                     }
-                }
-            }
+                })
+            QQWuhanCoronavirusService.instance
+                .getWuweiWWGlobalVars()
+                .enqueue(object : Callback<WuweiWWGlobalVars> {
+                    override fun onFailure(call: Call<WuweiWWGlobalVars>, t: Throwable) {
+                        views.setTextViewText(
+                            R.id.tv_last_updated,
+                            "An error occurred... (click to refresh)"
+                        )
+                        listOf(
+                            R.id.tv_suspected_cases
+                        ).forEach {
+                            views.setTextViewText(it, "Error")
+                        }
+                        appWidgetManager.updateAppWidget(appWidgetId, views)
+                        call.cancel()
+                    }
+
+                    override fun onResponse(
+                        call: Call<WuweiWWGlobalVars>,
+                        response: Response<WuweiWWGlobalVars>
+                    ) {
+                        response.body()?.stats?.let { stats ->
+                            views.setTextViewText(
+                                R.id.tv_suspected_cases,
+                                "~${stats.suspectCount}"
+                            )
+                        } ?: views.setTextViewText(
+                            R.id.tv_last_updated,
+                            "An error occurred... (click to refresh)"
+                        )
+
+                        appWidgetManager.updateAppWidget(appWidgetId, views)
+                    }
+                })
         }
     }
 
-
-    companion object {
-        const val DATA_SOURCE = "https://3g.dxy.cn/newh5/view/pneumonia?scene=2" +
-                "&clicktime=1579582238&enterid=1579582238&from=singlemessage&isappinstalled=0"
+    private fun getLocalTime(): String {
+        return SimpleDateFormat(
+            "HH:mm:ss",
+            Locale.getDefault()
+        ).format(Date())
     }
 
+    companion object {
+        @SuppressLint("ConstantLocale")
+        val chineseToDefaultCountryNameMap: Map<String, String> = Locale.getAvailableLocales().map {
+            it.getDisplayCountry(Locale.SIMPLIFIED_CHINESE) to it.getDisplayCountry(Locale.getDefault())
+        }.toMap()
+    }
 }
