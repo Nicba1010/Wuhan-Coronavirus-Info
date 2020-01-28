@@ -4,11 +4,25 @@ import com.google.gson.Gson
 
 
 data class WuweiWWAreaCountsResponse(
-    val ret: Int,
-    val data: String
+    val ret: Int = -1,
+    val data: String = ""
 ) {
-    val stats: List<Stats>
-        get() = gson.fromJson(data, Array<Stats>::class.java).toList()
+    @delegate:Transient
+    val stats: List<Stats> by lazy {
+        gson.fromJson(data, Array<Stats>::class.java).toList()
+    }
+
+    @delegate:Transient
+    val globalStats: GlobalStats by lazy {
+        stats.fold(GlobalStats(0, 0, 0, 0)) { globalStats, stats ->
+            globalStats.apply {
+                confirm += stats.confirm
+                suspect += stats.suspect
+                dead += stats.dead
+                heal += stats.heal
+            }
+        }
+    }
 
 
     companion object {
@@ -23,5 +37,12 @@ data class WuweiWWAreaCountsResponse(
         val suspect: Int,
         val dead: Int,
         val heal: Int
+    )
+
+    data class GlobalStats(
+        var confirm: Int,
+        var suspect: Int,
+        var dead: Int,
+        var heal: Int
     )
 }

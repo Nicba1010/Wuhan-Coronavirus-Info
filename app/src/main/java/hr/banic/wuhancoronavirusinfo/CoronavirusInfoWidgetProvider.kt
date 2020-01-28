@@ -44,7 +44,11 @@ class CoronavirusInfoWidgetProvider : AppWidgetProvider() {
             views.setOnClickPendingIntent(R.id.ll_root, pendingRefreshIntent)
             views.setTextViewText(
                 R.id.tv_last_updated,
-                "Updating..."
+                context.getString(R.string.updating)
+            )
+            views.setTextViewText(
+                R.id.tv_currently_infected_countries,
+                context.getString(R.string.currently_infected_countries_updating)
             )
             showProgressBars(views, true)
             appWidgetManager.updateAppWidget(appWidgetId, views)
@@ -56,6 +60,10 @@ class CoronavirusInfoWidgetProvider : AppWidgetProvider() {
                         views.setTextViewText(
                             R.id.tv_last_updated,
                             "An error occurred... (click to refresh)"
+                        )
+                        views.setTextViewText(
+                            R.id.tv_currently_infected_countries,
+                            context.getString(R.string.currently_infected_countries_error)
                         )
 
                         showProgressBars(
@@ -112,32 +120,33 @@ class CoronavirusInfoWidgetProvider : AppWidgetProvider() {
                                 R.id.tv_recoveries,
                                 statsList.sumBy { it.heal }.toString()
                             )
+
                             views.setTextViewText(
                                 R.id.tv_currently_infected_countries,
-                                "Currently infected countries: " + statsList.distinctBy { stats ->
-                                    stats.country
-                                }.map { stats ->
-                                    stats.country to statsList.filter {
-                                        it.country == stats.country
-                                    }.sumBy {
-                                        it.confirm
+                                context.getString(
+                                    R.string.currently_infected_countries,
+                                    statsList.groupingBy {
+                                        it.country
+                                    }.fold(0) { accumulator, stats ->
+                                        accumulator + stats.confirm
+                                    }.filter {
+                                        it.value > 0
+                                    }.mapKeys {
+                                        chineseToDefaultCountryNameMap[it.key] ?: it.key
+                                    }.toList().sortedByDescending {
+                                        it.second
+                                    }.joinToString(", ") {
+                                        "${it.first} (${it.second})"
                                     }
-                                }.filter {
-                                    it.second > 0
-                                }.sortedByDescending {
-                                    it.second
-                                }.joinToString(", ") {
-                                    (chineseToDefaultCountryNameMap[it.first] ?: it.first) +
-                                            " (${it.second})"
-                                }
+                                )
                             )
                             views.setTextViewText(
                                 R.id.tv_last_updated,
-                                "Last updated at ${getLocalTime()} (click to refresh)"
+                                context.getString(R.string.last_updated_at, getLocalTime())
                             )
                         } ?: views.setTextViewText(
                             R.id.tv_last_updated,
-                            "An error occurred... (click to refresh)"
+                            context.getString(R.string.error_occured)
                         )
 
                         showProgressBars(

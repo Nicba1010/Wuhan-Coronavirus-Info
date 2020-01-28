@@ -14,7 +14,7 @@
         android:layout_height="wrap_content"
         android:layout_weight="0.01"
         android:gravity="center"
-        android:text="Current global 2019-nCov stats"
+        android:text="@string/widget_title"
         android:textColor="#AFAFAF"
         android:textSize="16sp" />
 
@@ -47,11 +47,7 @@
 
         <ProgressBar
             android:id="@+id/pb_confirmed_cases"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:indeterminate="true"
-            android:visibility="gone" />
+            style="@style/style_pb_case_count" />
 
         <TextView
             android:id="@+id/tv_suspected_cases"
@@ -61,11 +57,7 @@
 
         <ProgressBar
             android:id="@+id/pb_suspected_cases"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:indeterminate="true"
-            android:visibility="gone" />
+            style="@style/style_pb_case_count" />
     </LinearLayout>
 
     <LinearLayout
@@ -97,11 +89,7 @@
 
         <ProgressBar
             android:id="@+id/pb_deaths"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:indeterminate="true"
-            android:visibility="gone" />
+            style="@style/style_pb_case_count" />
 
         <TextView
             android:id="@+id/tv_recoveries"
@@ -111,11 +99,7 @@
 
         <ProgressBar
             android:id="@+id/pb_recoveries"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:indeterminate="true"
-            android:visibility="gone" />
+            style="@style/style_pb_case_count" />
     </LinearLayout>
 
     <TextView
@@ -124,7 +108,7 @@
         android:layout_height="wrap_content"
         android:layout_weight="0.01"
         android:gravity="start"
-        android:text="Currently infected countries: "
+        android:text="@string/currently_infected_countries_not_loaded"
         android:textColor="#AFAFAF"
         android:textSize="8sp" />
 
@@ -134,7 +118,7 @@
         android:layout_height="wrap_content"
         android:layout_weight="0.01"
         android:gravity="center"
-        android:text="Last updated at ? (click to refresh)"
+        android:text="@string/data_not_yet_fetched"
         android:textColor="#AFAFAF"
         android:textSize="8sp" />
 </LinearLayout>
