@@ -79,6 +79,7 @@ class CoronavirusInfoWidgetProvider : AppWidgetProvider() {
                         }
                         appWidgetManager.updateAppWidget(appWidgetId, views)
                         call.cancel()
+                        Log.e("Retrofit", "getWuweiWWAreaCounts()", t)
                     }
 
                     override fun onResponse(
@@ -149,6 +150,7 @@ class CoronavirusInfoWidgetProvider : AppWidgetProvider() {
                         }
                         appWidgetManager.updateAppWidget(appWidgetId, views)
                         call.cancel()
+                        Log.e("Retrofit", "getWuweiWWGlobalVars()", t)
                     }
 
                     override fun onResponse(

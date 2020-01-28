@@ -19,7 +19,7 @@ data class WuweiWWGlobalVars(
         val confirmCount: Int,
         val suspectCount: Int,
         val deadCount: Int,
-        val useTotal: Boolean,
+        val useTotal: Int,
         val hintWords: String,
         val recentTime: String,
         val cure: Int
