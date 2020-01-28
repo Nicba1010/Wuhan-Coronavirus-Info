@@ -8,4 +8,3 @@
     android:resizeMode="horizontal|vertical"
     android:widgetCategory="home_screen">
 </appwidget-provider>
-<!--    android:configure="com.example.android.ExampleAppWidgetConfigure"-->

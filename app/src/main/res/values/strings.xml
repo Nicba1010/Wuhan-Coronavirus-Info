@@ -1,3 +1,8 @@
 <resources>
     <string name="app_name">(Wuhan) Coronavirus Info</string>
+    <string name="deaths">Deaths</string>
+    <string name="recoveries">Recoveries</string>
+    <string name="suspected_cases">Suspected Cases</string>
+    <string name="confirmed_cases">Confirmed Cases</string>
+    <string name="question_mark">\?</string>
 </resources>

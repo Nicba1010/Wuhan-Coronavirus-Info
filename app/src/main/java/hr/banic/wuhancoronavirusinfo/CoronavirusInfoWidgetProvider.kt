@@ -7,6 +7,7 @@ import android.appwidget.AppWidgetProvider
 import android.content.Context
 import android.content.Intent
 import android.util.Log
+import android.view.View
 import android.widget.RemoteViews
 import retrofit2.Call
 import retrofit2.Callback
@@ -49,14 +50,7 @@ class CoronavirusInfoWidgetProvider : AppWidgetProvider() {
                 R.id.tv_last_updated,
                 "Updating..."
             )
-            listOf(
-                R.id.tv_confirmed_cases,
-                R.id.tv_suspected_cases,
-                R.id.tv_deaths,
-                R.id.tv_recoveries
-            ).forEach {
-                views.setTextViewText(it, "?")
-            }
+            showProgressBars(views, true)
             appWidgetManager.updateAppWidget(appWidgetId, views)
 
             QQWuhanCoronavirusService.instance
@@ -68,7 +62,25 @@ class CoronavirusInfoWidgetProvider : AppWidgetProvider() {
                             "An error occurred... (click to refresh)"
                         )
 
-                        listOf(
+                        showProgressBars(
+                            views,
+                            false,
+                            arrayOf(
+                                R.id.tv_confirmed_cases,
+//                                R.id.tv_suspected_cases,
+                                // TODO: If they fix API reenable this
+                                R.id.tv_deaths,
+                                R.id.tv_recoveries
+                            ),
+                            arrayOf(
+                                R.id.pb_confirmed_cases,
+//                                R.id.pb_suspected_cases,
+                                // TODO: If they fix API reenable this
+                                R.id.pb_deaths,
+                                R.id.pb_recoveries
+                            )
+                        )
+                        arrayOf(
                             R.id.tv_confirmed_cases,
 //                            R.id.tv_suspected_cases,
                             // TODO: If they fix API reenable this
@@ -132,6 +144,24 @@ class CoronavirusInfoWidgetProvider : AppWidgetProvider() {
                             "An error occurred... (click to refresh)"
                         )
 
+                        showProgressBars(
+                            views,
+                            false,
+                            arrayOf(
+                                R.id.tv_confirmed_cases,
+//                                R.id.tv_suspected_cases,
+                                // TODO: If they fix API reenable this
+                                R.id.tv_deaths,
+                                R.id.tv_recoveries
+                            ),
+                            arrayOf(
+                                R.id.pb_confirmed_cases,
+//                                R.id.pb_suspected_cases,
+                                // TODO: If they fix API reenable this
+                                R.id.pb_deaths,
+                                R.id.pb_recoveries
+                            )
+                        )
                         appWidgetManager.updateAppWidget(appWidgetId, views)
                     }
                 })
@@ -143,7 +173,13 @@ class CoronavirusInfoWidgetProvider : AppWidgetProvider() {
                             R.id.tv_last_updated,
                             "An error occurred... (click to refresh)"
                         )
-                        listOf(
+                        showProgressBars(
+                            views,
+                            false,
+                            arrayOf(R.id.tv_suspected_cases),
+                            arrayOf(R.id.pb_suspected_cases)
+                        )
+                        arrayOf(
                             R.id.tv_suspected_cases
                         ).forEach {
                             views.setTextViewText(it, "Error")
@@ -166,10 +202,39 @@ class CoronavirusInfoWidgetProvider : AppWidgetProvider() {
                             R.id.tv_last_updated,
                             "An error occurred... (click to refresh)"
                         )
-
+                        showProgressBars(
+                            views,
+                            false,
+                            arrayOf(R.id.tv_suspected_cases),
+                            arrayOf(R.id.pb_suspected_cases)
+                        )
                         appWidgetManager.updateAppWidget(appWidgetId, views)
                     }
                 })
+        }
+    }
+
+    fun showProgressBars(
+        views: RemoteViews,
+        show: Boolean,
+        tvs: Array<Int> = arrayOf(
+            R.id.tv_confirmed_cases,
+            R.id.tv_suspected_cases,
+            R.id.tv_deaths,
+            R.id.tv_recoveries
+        ),
+        pbs: Array<Int> = arrayOf(
+            R.id.pb_confirmed_cases,
+            R.id.pb_suspected_cases,
+            R.id.pb_deaths,
+            R.id.pb_recoveries
+        )
+    ) {
+        tvs.forEach {
+            views.setViewVisibility(it, if (show) View.GONE else View.VISIBLE)
+        }
+        pbs.forEach {
+            views.setViewVisibility(it, if (show) View.VISIBLE else View.GONE)
         }
     }
 

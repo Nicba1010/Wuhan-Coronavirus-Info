@@ -21,26 +21,16 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_weight="1"
+        android:layout_weight="0"
         android:orientation="horizontal">
 
         <TextView
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:gravity="center"
-            android:text="Confirmed Cases"
-            android:textColor="#AFAFAF"
-            android:textSize="16sp" />
+            style="@style/style_tv_case_count_label"
+            android:text="@string/confirmed_cases" />
 
         <TextView
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:gravity="center"
-            android:text="Suspected Cases"
-            android:textColor="#AFAFAF"
-            android:textSize="16sp" />
+            style="@style/style_tv_case_count_label"
+            android:text="@string/suspected_cases" />
     </LinearLayout>
 
     <LinearLayout
@@ -51,48 +41,46 @@
 
         <TextView
             android:id="@+id/tv_confirmed_cases"
+            style="@style/style_tv_case_count"
+            android:text="@string/question_mark"
+            android:textColor="#A60404" />
+
+        <ProgressBar
+            android:id="@+id/pb_confirmed_cases"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:gravity="center"
-            android:text="\?"
-            android:textColor="#A60404"
-            android:textSize="32sp" />
+            android:indeterminate="true"
+            android:visibility="gone" />
 
         <TextView
             android:id="@+id/tv_suspected_cases"
+            style="@style/style_tv_case_count"
+            android:text="@string/question_mark"
+            android:textColor="#FF8F00" />
+
+        <ProgressBar
+            android:id="@+id/pb_suspected_cases"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:gravity="center"
-            android:text="\?"
-            android:textColor="#FF8F00"
-            android:textSize="32sp" />
+            android:indeterminate="true"
+            android:visibility="gone" />
     </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_weight="1"
+        android:layout_weight="0"
         android:orientation="horizontal">
 
         <TextView
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:gravity="center"
-            android:text="Deaths"
-            android:textColor="#AFAFAF"
-            android:textSize="16sp" />
+            style="@style/style_tv_case_count_label"
+            android:text="@string/deaths" />
 
         <TextView
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:gravity="center"
-            android:text="Recoveries"
-            android:textColor="#AFAFAF"
-            android:textSize="16sp" />
+            style="@style/style_tv_case_count_label"
+            android:text="@string/recoveries" />
     </LinearLayout>
 
     <LinearLayout
@@ -103,23 +91,31 @@
 
         <TextView
             android:id="@+id/tv_deaths"
+            style="@style/style_tv_case_count"
+            android:text="@string/question_mark"
+            android:textColor="#7C7C7C" />
+
+        <ProgressBar
+            android:id="@+id/pb_deaths"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:gravity="center"
-            android:text="\?"
-            android:textColor="#7C7C7C"
-            android:textSize="32sp" />
+            android:indeterminate="true"
+            android:visibility="gone" />
 
         <TextView
             android:id="@+id/tv_recoveries"
+            style="@style/style_tv_case_count"
+            android:text="@string/question_mark"
+            android:textColor="#2E7D32" />
+
+        <ProgressBar
+            android:id="@+id/pb_recoveries"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:gravity="center"
-            android:text="\?"
-            android:textColor="#2E7D32"
-            android:textSize="32sp" />
+            android:indeterminate="true"
+            android:visibility="gone" />
     </LinearLayout>
 
     <TextView
