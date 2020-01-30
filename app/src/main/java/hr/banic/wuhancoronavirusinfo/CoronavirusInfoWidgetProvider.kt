@@ -1,6 +1,5 @@
 package hr.banic.wuhancoronavirusinfo
 
-import android.annotation.SuppressLint
 import android.app.PendingIntent
 import android.appwidget.AppWidgetManager
 import android.appwidget.AppWidgetProvider
@@ -54,9 +53,9 @@ class CoronavirusInfoWidgetProvider : AppWidgetProvider() {
             appWidgetManager.updateAppWidget(appWidgetId, views)
 
             QQWuhanCoronavirusService.instance
-                .getWuweiWWAreaCounts()
-                .enqueue(object : Callback<WuweiWWAreaCountsResponse> {
-                    override fun onFailure(call: Call<WuweiWWAreaCountsResponse>, t: Throwable) {
+                .getDiseaseH5()
+                .enqueue(object : Callback<QQDiseaseH5> {
+                    override fun onFailure(call: Call<QQDiseaseH5>, t: Throwable) {
                         views.setTextViewText(
                             R.id.tv_last_updated,
                             context.getString(R.string.error_occurred)
@@ -66,28 +65,10 @@ class CoronavirusInfoWidgetProvider : AppWidgetProvider() {
                             context.getString(R.string.currently_infected_countries_error)
                         )
 
-                        showProgressBars(
-                            views,
-                            false,
-                            arrayOf(
-                                R.id.tv_confirmed_cases,
-//                                R.id.tv_suspected_cases,
-                                // TODO: If they fix API reenable this
-                                R.id.tv_deaths,
-                                R.id.tv_recoveries
-                            ),
-                            arrayOf(
-                                R.id.pb_confirmed_cases,
-//                                R.id.pb_suspected_cases,
-                                // TODO: If they fix API reenable this
-                                R.id.pb_deaths,
-                                R.id.pb_recoveries
-                            )
-                        )
+                        showProgressBars(views, false)
                         arrayOf(
                             R.id.tv_confirmed_cases,
-//                            R.id.tv_suspected_cases,
-                            // TODO: If they fix API reenable this
+                            R.id.tv_suspected_cases,
                             R.id.tv_deaths,
                             R.id.tv_recoveries
                         ).forEach {
@@ -95,45 +76,44 @@ class CoronavirusInfoWidgetProvider : AppWidgetProvider() {
                         }
                         appWidgetManager.updateAppWidget(appWidgetId, views)
                         call.cancel()
-                        Log.e("Retrofit", "getWuweiWWAreaCounts()", t)
+                        Log.e("Retrofit", "getQQDiseaseH5()", t)
                     }
 
                     override fun onResponse(
-                        call: Call<WuweiWWAreaCountsResponse>,
-                        response: Response<WuweiWWAreaCountsResponse>
+                        call: Call<QQDiseaseH5>,
+                        response: Response<QQDiseaseH5>
                     ) {
-                        response.body()?.let { areaCountsResponse ->
+                        response.body()?.disease?.let { disease ->
                             views.setTextViewText(
                                 R.id.tv_confirmed_cases,
-                                areaCountsResponse.globalStats.confirm.toString()
+                                disease.global.confirm.toString()
                             )
-//                            views.setTextViewText(
-//                                R.id.tv_suspected_cases,
-//                                areaCountsResponse.globalStats.suspect.toString()
-//                            )
-                            // TODO: If they fix API reenable this
+                            views.setTextViewText(
+                                R.id.tv_suspected_cases,
+                                disease.global.suspect.toString()
+                            )
                             views.setTextViewText(
                                 R.id.tv_deaths,
-                                areaCountsResponse.globalStats.dead.toString()
+                                disease.global.dead.toString()
                             )
                             views.setTextViewText(
                                 R.id.tv_recoveries,
-                                areaCountsResponse.globalStats.heal.toString()
+                                disease.global.heal.toString()
                             )
 
                             views.setTextViewText(
                                 R.id.tv_currently_infected_countries,
                                 context.getString(
                                     R.string.currently_infected_countries,
-                                    areaCountsResponse.countryStats.filter {
-                                        it.confirm > 0
+                                    disease.areaTree.filter {
+                                        it.total.confirm > 0
                                     }.sortedByDescending {
-                                        it.confirm
+                                        it.total.confirm
                                     }.joinToString(", ") {
                                         context.getString(
                                             R.string.currently_infected_country_detail,
-                                            chToLocalCountryMap[it.country] ?: it.country,
-                                            it.confirm
+                                            it.name,
+                                            it.total.confirm
                                         )
                                     }
                                 )
@@ -147,70 +127,7 @@ class CoronavirusInfoWidgetProvider : AppWidgetProvider() {
                             context.getString(R.string.error_occurred)
                         )
 
-                        showProgressBars(
-                            views,
-                            false,
-                            arrayOf(
-                                R.id.tv_confirmed_cases,
-//                                R.id.tv_suspected_cases,
-                                // TODO: If they fix API reenable this
-                                R.id.tv_deaths,
-                                R.id.tv_recoveries
-                            ),
-                            arrayOf(
-                                R.id.pb_confirmed_cases,
-//                                R.id.pb_suspected_cases,
-                                // TODO: If they fix API reenable this
-                                R.id.pb_deaths,
-                                R.id.pb_recoveries
-                            )
-                        )
-                        appWidgetManager.updateAppWidget(appWidgetId, views)
-                    }
-                })
-            QQWuhanCoronavirusService.instance
-                .getWuweiWWGlobalVars()
-                .enqueue(object : Callback<WuweiWWGlobalVars> {
-                    override fun onFailure(call: Call<WuweiWWGlobalVars>, t: Throwable) {
-                        views.setTextViewText(
-                            R.id.tv_last_updated,
-                            "An error occurred... (click to refresh)"
-                        )
-                        showProgressBars(
-                            views,
-                            false,
-                            arrayOf(R.id.tv_suspected_cases),
-                            arrayOf(R.id.pb_suspected_cases)
-                        )
-                        arrayOf(
-                            R.id.tv_suspected_cases
-                        ).forEach {
-                            views.setTextViewText(it, "Error")
-                        }
-                        appWidgetManager.updateAppWidget(appWidgetId, views)
-                        call.cancel()
-                        Log.e("Retrofit", "getWuweiWWGlobalVars()", t)
-                    }
-
-                    override fun onResponse(
-                        call: Call<WuweiWWGlobalVars>,
-                        response: Response<WuweiWWGlobalVars>
-                    ) {
-                        response.body()?.stats?.let { stats ->
-                            views.setTextViewText(
-                                R.id.tv_suspected_cases,
-                                "~${stats.suspectCount}"
-                            )
-                        } ?: views.setTextViewText(
-                            R.id.tv_last_updated,
-                            "An error occurred... (click to refresh)"
-                        )
-                        showProgressBars(
-                            views,
-                            false,
-                            arrayOf(R.id.tv_suspected_cases),
-                            arrayOf(R.id.pb_suspected_cases)
-                        )
+                        showProgressBars(views, false)
                         appWidgetManager.updateAppWidget(appWidgetId, views)
                     }
                 })
@@ -246,12 +163,5 @@ class CoronavirusInfoWidgetProvider : AppWidgetProvider() {
             "HH:mm:ss",
             Locale.getDefault()
         ).format(Date())
-    }
-
-    companion object {
-        @SuppressLint("ConstantLocale")
-        val chToLocalCountryMap: Map<String, String> = Locale.getAvailableLocales().map {
-            it.getDisplayCountry(Locale.SIMPLIFIED_CHINESE) to it.getDisplayCountry(Locale.getDefault())
-        }.toMap()
     }
 }

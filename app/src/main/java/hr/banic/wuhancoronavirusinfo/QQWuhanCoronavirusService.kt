@@ -6,11 +6,8 @@ import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.http.GET
 
 interface QQWuhanCoronavirusService {
-    @GET("g2/getOnsInfo?name=wuwei_ww_area_counts")
-    fun getWuweiWWAreaCounts(): Call<WuweiWWAreaCountsResponse>
-
-    @GET("g2/getOnsInfo?name=wuwei_ww_global_vars")
-    fun getWuweiWWGlobalVars(): Call<WuweiWWGlobalVars>
+    @GET("g2/getOnsInfo?name=disease_h5")
+    fun getDiseaseH5(): Call<QQDiseaseH5>
 
     companion object {
         private val retrofit: Retrofit = Retrofit.Builder()
