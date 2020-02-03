@@ -1,6 +1,6 @@
 <resources>
-    <string name="app_name">(Wuhan) Coronavirus Info</string>
-    <string name="widget_title">Current global 2019-nCov stats</string>
+    <string name="app_name">2019-nCov Info (Wuhan Coronavirus)</string>
+    <string name="widget_title">2019-nCov | \u00A9 2020, Nicba1010</string>
 
     <string name="deaths">Deaths</string>
     <string name="recoveries">Recoveries</string>
@@ -8,16 +8,28 @@
     <string name="confirmed_cases">Confirmed Cases</string>
 
     <string name="question_mark">\?</string>
+    <string name="error">Error</string>
+    <string name="delta_amount">+~%1$d (from yesterday GMT+7)</string>
 
-    <string name="last_updated_at">Last updated at %1$s (click to refresh)</string>
-    <string name="error_occurred">An error occurred… (click to refresh)</string>
+    <string name="last_updated_at">Updated at %1$s (tap to refresh)</string>
+    <string name="error_occurred">An error occurred… (tap to refresh)</string>
     <string name="data_not_yet_fetched">Data not yet fetched</string>
 
-    <string name="currently_infected_countries">Currently infected countries: %1$s</string>
+    <string name="currently_infected_countries_expand">Currently infected countries (tap to expand): %1$s</string>
+    <string name="currently_infected_countries_collapse">Currently infected countries (tap to collapse): %1$s</string>
     <string name="currently_infected_countries_error">Error occurred updating currently infected countries…</string>
     <string name="currently_infected_countries_updating">Updating currently infected countries…</string>
     <string name="currently_infected_countries_not_loaded">Currently infected countries not loaded</string>
 
     <string name="currently_infected_country_detail">%1$s (%2$d)</string>
     <string name="updating">Updating…</string>
+    <string name="title_activity_coronavirus_info_app_widget_configure">
+        Widget Configuration
+    </string>
+    <string name="general">General</string>
+    <string name="theme">Theme</string>
+
+    <string name="preference_key_theme">theme</string>
+    <string name="preference_key_flag_mode">flag_mode</string>
+    <string name="flag_mode">Flag Mode</string>
 </resources>

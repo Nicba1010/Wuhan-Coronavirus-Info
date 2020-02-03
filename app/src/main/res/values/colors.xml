@@ -3,4 +3,21 @@
     <color name="colorPrimary">#6200EE</color>
     <color name="colorPrimaryDark">#3700B3</color>
     <color name="colorAccent">#03DAC5</color>
+
+    <color name="colorConfirmedDark">#A60404</color>
+    <color name="colorConfirmedDarkAmoled">#D80707</color>
+    <color name="colorSuspectedDark">#FF8F00</color>
+    <color name="colorSuspectedDarkAmoled">#FB9D24</color>
+    <color name="colorDeathsDark">#7C7C7C</color>
+    <color name="colorDeathsDarkAmoled">#DADADA</color>
+    <color name="colorRecoveredDark">#2E7D32</color>
+    <color name="colorRecoveredDarkAmoled">#35B83B</color>
+
+    <color name="textShadowColorLight">#7F000000</color>
+    <color name="textColorDark">#AFAFAF</color>
+    <color name="textColorDarkAmoled">#FFFFFF</color>
+
+    <color name="colorBackgroundLight">#10FFFFFF</color>
+    <color name="colorBackgroundDark">#2B2B2B</color>
+    <color name="colorBackgroundDarkAmoled">#000000</color>
 </resources>

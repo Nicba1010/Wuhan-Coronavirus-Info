@@ -1,0 +1,14 @@
+<resources>
+    <!-- Theme Preference -->
+    <string-array name="theme_entries">
+        <item>Dark</item>
+        <item>Dark Amoled</item>
+        <item>Light</item>
+    </string-array>
+
+    <array name="theme_values">
+        <item>@layout/coronavirus_info_appwidget_dark</item>
+        <item>@layout/coronavirus_info_appwidget_amoled</item>
+        <item>@layout/coronavirus_info_appwidget_light</item>
+    </array>
+</resources>

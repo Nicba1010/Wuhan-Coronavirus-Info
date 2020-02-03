@@ -1,0 +1,203 @@
+<?xml version="1.0" encoding="utf-8"?>
+<merge xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:showIn="@layout/coronavirus_info_appwidget_dark">
+
+    <LinearLayout
+        android:id="@+id/ll_confirmed_suspected"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:id="@+id/ll_confirmed_suspected_labels"
+            style="@style/style_ll_labels">
+
+            <TextView
+                style="@style/style_tv_case_count_label"
+                android:text="@string/confirmed_cases" />
+
+            <TextView
+                style="@style/style_tv_case_count_label"
+                android:text="@string/suspected_cases" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/ll_confirmed_suspected_values"
+            style="@style/style_ll_values"
+            android:gravity="top">
+
+            <ProgressBar
+                android:id="@+id/pb_confirmed_cases"
+                style="@style/style_pb_case_count" />
+
+            <LinearLayout
+                android:id="@+id/ll_confirmed"
+                style="@style/style_ll_value">
+
+                <TextView
+                    android:id="@+id/tv_confirmed_delta"
+                    style="@style/style_tv_case_count.delta"
+                    android:text="@string/question_mark"
+                    android:textColor="?colorConfirmed"
+                    tools:text="+1000 (from yesterday)" />
+
+                <TextView
+                    android:id="@+id/tv_confirmed"
+                    style="@style/style_tv_case_count.current"
+                    android:text="@string/question_mark"
+                    android:textColor="?colorConfirmed"
+                    tools:text="10000" />
+            </LinearLayout>
+
+
+            <ProgressBar
+                android:id="@+id/pb_suspected_cases"
+                style="@style/style_pb_case_count" />
+
+
+            <LinearLayout
+                android:id="@+id/ll_suspected"
+                style="@style/style_ll_value">
+
+                <TextView
+                    android:id="@+id/tv_suspected_delta"
+                    style="@style/style_tv_case_count.delta"
+                    android:text="@string/question_mark"
+                    android:textColor="?colorSuspected"
+                    tools:text="+10000 (from yesterday)" />
+
+                <TextView
+                    android:id="@+id/tv_suspected"
+                    style="@style/style_tv_case_count.current"
+                    android:text="@string/question_mark"
+                    android:textColor="?colorSuspected"
+                    tools:text="100000" />
+            </LinearLayout>
+        </LinearLayout>
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/tv_last_updated"
+        style="@style/style_details"
+        android:layout_weight="0"
+        android:gravity="center"
+        android:text="@string/data_not_yet_fetched"
+        android:textSize="12dp" />
+
+    <LinearLayout
+        android:id="@+id/ll_deaths_recoveries"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:id="@+id/ll_deaths_recoveries_labels"
+            style="@style/style_ll_labels">
+
+            <TextView
+                style="@style/style_tv_case_count_label"
+                android:text="@string/deaths" />
+
+            <TextView
+                style="@style/style_tv_case_count_label"
+                android:text="@string/recoveries" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/ll_deaths_recoveries_values"
+            style="@style/style_ll_values">
+
+            <ProgressBar
+                android:id="@+id/pb_deaths"
+                style="@style/style_pb_case_count" />
+
+            <LinearLayout
+                android:id="@+id/ll_deaths"
+                style="@style/style_ll_value">
+
+                <TextView
+                    android:id="@+id/tv_deaths_delta"
+                    style="@style/style_tv_case_count.delta"
+                    android:text="@string/question_mark"
+                    android:textColor="?colorDeaths"
+                    tools:text="+100 (from yesterday)" />
+
+                <TextView
+                    android:id="@+id/tv_deaths"
+                    style="@style/style_tv_case_count.current"
+                    android:text="@string/question_mark"
+                    android:textColor="?colorDeaths"
+                    tools:text="1000" />
+            </LinearLayout>
+
+            <ProgressBar
+                android:id="@+id/pb_recoveries"
+                style="@style/style_pb_case_count" />
+
+            <LinearLayout
+                android:id="@+id/ll_recoveries"
+                style="@style/style_ll_value">
+
+                <TextView
+                    android:id="@+id/tv_recoveries_delta"
+                    style="@style/style_tv_case_count.delta"
+                    android:text="@string/question_mark"
+                    android:textColor="?colorRecovered"
+                    tools:text="+1000 (from yesterday)" />
+
+                <TextView
+                    android:id="@+id/tv_recoveries"
+                    style="@style/style_tv_case_count.current"
+                    android:text="@string/question_mark"
+                    android:textColor="?colorRecovered"
+                    tools:text="10000" />
+            </LinearLayout>
+
+        </LinearLayout>
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/tv_currently_infected_countries_collapsed"
+        style="@style/style_details"
+        android:clickable="true"
+        android:ellipsize="end"
+        android:focusable="true"
+        android:gravity="start"
+        android:justificationMode="inter_word"
+        android:maxLines="3"
+        android:padding="4dp"
+        android:text="@string/currently_infected_countries_not_loaded"
+        android:visibility="visible"
+        tools:ignore="UnusedAttribute"
+        tools:text="Currently infected countries: Fake Country (100), Fake Country (100), Fake Country (100), Fake Country (100), Fake Country (100), Fake Country (100), Fake Country (100), Fake Country (100), Fake Country (100), Fake Country (100), Fake Country (100), Fake Country (100), Fake Country (100), Fake Country (100), Fake Country (100), Fake Country (100), Fake Country (100), Fake Country (100), Fake Country (100), Fake Country (100)" />
+
+    <TextView
+        android:id="@+id/tv_currently_infected_countries_expanded"
+        style="@style/style_details"
+        android:clickable="true"
+        android:focusable="true"
+        android:gravity="start"
+        android:justificationMode="inter_word"
+        android:text="@string/currently_infected_countries_not_loaded"
+        android:visibility="gone"
+        tools:ignore="UnusedAttribute"
+        tools:text="Currently infected countries: Fake Country (100), Fake Country (100), Fake Country (100), Fake Country (100), Fake Country (100), Fake Country (100), Fake Country (100), Fake Country (100), Fake Country (100), Fake Country (100), Fake Country (100), Fake Country (100), Fake Country (100), Fake Country (100), Fake Country (100), Fake Country (100), Fake Country (100), Fake Country (100), Fake Country (100), Fake Country (100)" />
+
+    <!--    <TextView-->
+    <!--        android:id="@+id/tv_last_updated"-->
+    <!--        style="@style/style_details"-->
+    <!--        android:gravity="center"-->
+    <!--        android:text="@string/data_not_yet_fetched" />-->
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="0"
+        android:gravity="center"
+        android:includeFontPadding="false"
+        android:text="@string/widget_title"
+        android:textSize="8dp" />
+</merge>

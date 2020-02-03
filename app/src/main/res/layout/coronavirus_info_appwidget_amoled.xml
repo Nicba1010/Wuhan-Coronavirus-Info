@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/ll_root"
+    style="@style/style_ll_root"
+    android:theme="@style/AppTheme.Dark.Amoled"
+    tools:layout_height="300dp"
+    tools:layout_width="match_parent">
+
+
+    <include layout="@layout/widget_container" />
+</LinearLayout>
