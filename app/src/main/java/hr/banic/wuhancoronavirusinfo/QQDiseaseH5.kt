@@ -72,16 +72,16 @@ data class QQDiseaseH5(
             val internalHeal: String = "-1"
         ) {
             val confirm: Int by lazy {
-                internalConfirm.toInt()
+                internalConfirm.trim().toInt()
             }
             val suspect: Int by lazy {
-                internalSuspect.toInt()
+                internalSuspect.trim().toInt()
             }
             val dead: Int by lazy {
-                internalDead.toInt()
+                internalDead.trim().toInt()
             }
             val heal: Int by lazy {
-                internalHeal.toInt()
+                internalHeal.trim().toInt()
             }
         }
 
