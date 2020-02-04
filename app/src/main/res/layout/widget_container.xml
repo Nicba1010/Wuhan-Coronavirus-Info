@@ -181,6 +181,7 @@
         android:focusable="true"
         android:gravity="start"
         android:justificationMode="inter_word"
+        android:padding="4dp"
         android:text="@string/currently_infected_countries_not_loaded"
         android:visibility="gone"
         tools:ignore="UnusedAttribute"
