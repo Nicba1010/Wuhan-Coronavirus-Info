@@ -58,10 +58,6 @@ class CoronavirusInfoAppWidgetConfigureActivity : AppCompatActivity() {
         }
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
-    }
-
     class SettingsFragment : PreferenceFragmentCompat() {
         private var appWidgetId: Int = AppWidgetManager.INVALID_APPWIDGET_ID
 
@@ -94,9 +90,7 @@ class CoronavirusInfoAppWidgetConfigureActivity : AppCompatActivity() {
                     val value = layouts.getResourceId(index, -1)
                     layouts.recycle()
 
-                    preference.preferenceDataStore?.let { dataStore ->
-                        dataStore.putInt(preference.key, value)
-                    } ?: preferenceManager.sharedPreferences.edit().apply {
+                    preference.preferenceDataStore?.putInt(preference.key, value) ?: preferenceManager.sharedPreferences.edit().apply {
                         putInt(preference.key, value)
                     }.apply()
                 }

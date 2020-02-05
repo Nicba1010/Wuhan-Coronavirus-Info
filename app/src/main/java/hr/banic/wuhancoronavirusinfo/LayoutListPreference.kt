@@ -6,9 +6,9 @@ import android.util.TypedValue
 import androidx.preference.ListPreference
 
 class LayoutListPreference : ListPreference {
-    lateinit var realValues: IntArray
-    var valueSet: Boolean = false
-    var realValue: Int = -1
+    private lateinit var realValues: IntArray
+    private var valueSet: Boolean = false
+    private var realValue: Int = -1
 
     constructor(
         context: Context,

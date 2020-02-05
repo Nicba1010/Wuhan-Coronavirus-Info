@@ -99,23 +99,23 @@ class CoronavirusInfoWidgetProvider : AppWidgetProvider() {
         showProgressBars(views, true)
         appWidgetManager.updateAppWidget(appWidgetId, views)
 
-        QQWuhanCoronavirusService.instance
-            .getDiseaseH5()
-            .enqueue(object : Callback<QQDiseaseH5> {
-                override fun onFailure(call: Call<QQDiseaseH5>, t: Throwable) {
+        WufluService.instance
+            .getQQData()
+            .enqueue(object : Callback<Disease> {
+                override fun onFailure(call: Call<Disease>, t: Throwable) {
                     setAllTextViewError(views, context)
                     appWidgetManager.updateAppWidget(appWidgetId, views)
                     call.cancel()
-                    Log.e("Retrofit", "getQQDiseaseH5()", t)
+                    Log.e("Retrofit", "getData()", t)
                 }
 
                 override fun onResponse(
-                    call: Call<QQDiseaseH5>,
-                    response: Response<QQDiseaseH5>
+                    call: Call<Disease>,
+                    response: Response<Disease>
                 ) {
-                    response.body()?.disease?.let { disease ->
-                        updateCountTextViews(views, disease, context)
-                        updateInfectedCountriesTextViews(disease, context, views, appWidgetId)
+                    response.body()?.timestampedData?.maxBy { it.date }?.let { data ->
+                        updateCountTextViews(views, data, context)
+                        updateInfectedCountriesTextViews(data, context, views, appWidgetId)
 
                         views.setTextViewText(
                             R.id.tv_last_updated,
@@ -166,21 +166,21 @@ class CoronavirusInfoWidgetProvider : AppWidgetProvider() {
     }
 
     private fun updateInfectedCountriesTextViews(
-        disease: QQDiseaseH5.Disease,
+        data: Disease.TimestampedData,
         context: Context,
         views: RemoteViews,
         appWidgetId: Int
     ) {
         val flagMode: Boolean = getFlagMode(context, appWidgetId)
-        val infectedCountries = disease.areaTree.filter {
-            it.total.confirm > 0
+        val infectedCountries = data.areas.filter {
+            it.confirmed > 0
         }.sortedByDescending {
-            it.total.confirm
+            it.confirmed
         }.joinToString(", ") {
             context.getString(
                 R.string.currently_infected_country_detail,
                 if (flagMode) it.flag else it.name,
-                it.total.confirm
+                it.confirmed
             )
         }
         views.setTextViewText(
@@ -201,28 +201,28 @@ class CoronavirusInfoWidgetProvider : AppWidgetProvider() {
 
     private fun updateCountTextViews(
         views: RemoteViews,
-        disease: QQDiseaseH5.Disease,
+        data: Disease.TimestampedData,
         context: Context
     ) {
-        views.setTextViewText(R.id.tv_confirmed, disease.global.confirm.toString())
-        views.setTextViewText(R.id.tv_suspected, disease.global.suspect.toString())
-        views.setTextViewText(R.id.tv_deaths, disease.global.dead.toString())
-        views.setTextViewText(R.id.tv_recoveries, disease.global.heal.toString())
+        views.setTextViewText(R.id.tv_confirmed, data.confirmed.toString())
+        views.setTextViewText(R.id.tv_suspected, data.suspected.toString())
+        views.setTextViewText(R.id.tv_deaths, data.deaths.toString())
+        views.setTextViewText(R.id.tv_recoveries, data.recoveries.toString())
         views.setTextViewText(
             R.id.tv_confirmed_delta,
-            context.getString(R.string.delta_amount, disease.globalToday.confirm)
+            context.getString(R.string.delta_amount, data.confirmed)
         )
         views.setTextViewText(
             R.id.tv_suspected_delta,
-            context.getString(R.string.delta_amount, disease.globalToday.suspect)
+            context.getString(R.string.delta_amount, data.suspected)
         )
         views.setTextViewText(
             R.id.tv_deaths_delta,
-            context.getString(R.string.delta_amount, disease.globalToday.dead)
+            context.getString(R.string.delta_amount, data.deaths)
         )
         views.setTextViewText(
             R.id.tv_recoveries_delta,
-            context.getString(R.string.delta_amount, disease.globalToday.heal)
+            context.getString(R.string.delta_amount, data.recoveries)
         )
     }
 
@@ -277,7 +277,7 @@ class CoronavirusInfoWidgetProvider : AppWidgetProvider() {
             "hr.banic.wuhancoronavirusinfo.ACTION_INFECTED_COUNTRIES_COLLAPSE"
         const val ACTION_INFECTED_COUNTRIES_EXPAND =
             "hr.banic.wuhancoronavirusinfo.ACTION_INFECTED_COUNTRIES_EXPAND"
-        const val SP_KEY_WIDGET_LAYOUT = "hr.banic.wuhancoronavirusinfo.WIDGET_LAYOUT"
+
         fun getTheme(context: Context, appWidgetId: Int): Int {
             val sp: SharedPreferences = context.getSharedPreferences(appWidgetId)
 
