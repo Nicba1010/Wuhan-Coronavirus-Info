@@ -6,9 +6,9 @@ import android.util.TypedValue
 import androidx.preference.ListPreference
 
 class LayoutListPreference : ListPreference {
-    private lateinit var realValues: IntArray
+    private var realValues: IntArray
     private var valueSet: Boolean = false
-    private var realValue: Int = -1
+    private var realValue: Int
 
     constructor(
         context: Context,
@@ -21,6 +21,7 @@ class LayoutListPreference : ListPreference {
                 array.getResourceId(index, -1)
             }
         }.toIntArray()
+        realValue = realValues[0]
     }
 
     constructor(

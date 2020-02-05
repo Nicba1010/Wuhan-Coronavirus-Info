@@ -204,25 +204,37 @@ class CoronavirusInfoWidgetProvider : AppWidgetProvider() {
         data: Disease.TimestampedData,
         context: Context
     ) {
-        views.setTextViewText(R.id.tv_confirmed, data.confirmed.toString())
-        views.setTextViewText(R.id.tv_suspected, data.suspected.toString())
-        views.setTextViewText(R.id.tv_deaths, data.deaths.toString())
-        views.setTextViewText(R.id.tv_recoveries, data.recoveries.toString())
+        views.setTextViewText(R.id.tv_confirmed, data.confirmedStr)
+        views.setTextViewText(R.id.tv_suspected, data.suspectedStr)
+        views.setTextViewText(R.id.tv_deaths, data.deathsStr)
+        views.setTextViewText(R.id.tv_recoveries, data.recoveriesStr)
         views.setTextViewText(
             R.id.tv_confirmed_delta,
-            context.getString(R.string.delta_amount, data.confirmed)
+            context.getString(
+                R.string.delta_amount,
+                data.approximateStats?.deltas?.confirmed ?: -1
+            )
         )
         views.setTextViewText(
             R.id.tv_suspected_delta,
-            context.getString(R.string.delta_amount, data.suspected)
+            context.getString(
+                R.string.delta_amount,
+                data.approximateStats?.deltas?.suspected ?: -1
+            )
         )
         views.setTextViewText(
             R.id.tv_deaths_delta,
-            context.getString(R.string.delta_amount, data.deaths)
+            context.getString(
+                R.string.delta_amount,
+                data.approximateStats?.deltas?.deaths ?: -1
+            )
         )
         views.setTextViewText(
             R.id.tv_recoveries_delta,
-            context.getString(R.string.delta_amount, data.recoveries)
+            context.getString(
+                R.string.delta_amount,
+                data.approximateStats?.deltas?.recoveries ?: -1
+            )
         )
     }
 
