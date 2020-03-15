@@ -19,8 +19,6 @@ interface WufluService {
             .create()
 
         private val client: OkHttpClient = OkHttpClient.Builder()
-            .readTimeout(16, TimeUnit.SECONDS)
-            .connectTimeout(16, TimeUnit.SECONDS)
             .build()
 
         private val retrofit: Retrofit = Retrofit.Builder()

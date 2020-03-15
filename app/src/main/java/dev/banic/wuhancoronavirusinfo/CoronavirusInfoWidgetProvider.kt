@@ -131,7 +131,10 @@ class CoronavirusInfoWidgetProvider : AppWidgetProvider() {
                     )
 
                     showProgressBars(context, views, appWidgetId, false)
+
                     appWidgetManager.updateAppWidget(appWidgetId, views)
+
+                    Log.d("T", response.body().toString())
                 }
             })
     }
