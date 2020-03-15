@@ -1,4 +1,4 @@
-package hr.banic.wuhancoronavirusinfo
+package dev.banic.wuhancoronavirusinfo
 
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="hr.banic.wuhancoronavirusinfo">
+    package="dev.banic.wuhancoronavirusinfo">
 
     <uses-permission android:name="android.permission.INTERNET" />
 
@@ -13,14 +13,14 @@
         android:theme="@style/AppTheme"
         android:fullBackupContent="@xml/backup_descriptor">
         <activity
-            android:name=".CoronavirusInfoAppWidgetConfigureActivity"
+            android:name="dev.banic.wuhancoronavirusinfo.CoronavirusInfoAppWidgetConfigureActivity"
             android:label="@string/title_activity_coronavirus_info_app_widget_configure">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_CONFIGURE"/>
             </intent-filter>
         </activity>
 
-        <receiver android:name=".CoronavirusInfoWidgetProvider">
+        <receiver android:name="dev.banic.wuhancoronavirusinfo.CoronavirusInfoWidgetProvider">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
             </intent-filter>

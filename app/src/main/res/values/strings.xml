@@ -1,6 +1,6 @@
 <resources>
-    <string name="app_name">2019-nCov Info (Wuhan Coronavirus)</string>
-    <string name="widget_title">2019-nCov | \u00A9 2020, Nicba1010</string>
+    <string name="app_name">COVID-19 Info</string>
+    <string name="widget_title">COVID-19 | \u00A9 2020, Nicba1010</string>
 
     <string name="death_cases">Deaths</string>
     <string name="recovery_cases">Recoveries</string>

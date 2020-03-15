@@ -2,7 +2,7 @@
     <PreferenceCategory
         app:iconSpaceReserved="false"
         app:title="@string/general">
-        <hr.banic.wuhancoronavirusinfo.LayoutListPreference
+        <dev.banic.wuhancoronavirusinfo.LayoutListPreference
             app:entries="@array/theme_entries"
             app:entryValues="@array/theme_values"
             app:iconSpaceReserved="false"

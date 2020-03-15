@@ -1,4 +1,4 @@
-package hr.banic.wuhancoronavirusinfo
+package dev.banic.wuhancoronavirusinfo
 
 import android.app.PendingIntent
 import android.appwidget.AppWidgetManager

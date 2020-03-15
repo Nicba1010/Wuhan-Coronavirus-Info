@@ -1,4 +1,4 @@
-package hr.banic.wuhancoronavirusinfo
+package dev.banic.wuhancoronavirusinfo
 
 import com.google.gson.annotations.SerializedName
 import java.util.*

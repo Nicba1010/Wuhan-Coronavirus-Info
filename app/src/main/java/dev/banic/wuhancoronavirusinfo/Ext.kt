@@ -1,4 +1,4 @@
-package hr.banic.wuhancoronavirusinfo
+package dev.banic.wuhancoronavirusinfo
 
 import android.content.Context
 import android.content.SharedPreferences

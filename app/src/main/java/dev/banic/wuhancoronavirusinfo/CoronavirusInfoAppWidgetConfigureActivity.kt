@@ -1,4 +1,4 @@
-package hr.banic.wuhancoronavirusinfo
+package dev.banic.wuhancoronavirusinfo
 
 import android.app.Activity
 import android.app.PendingIntent
@@ -6,7 +6,6 @@ import android.appwidget.AppWidgetManager
 import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import androidx.preference.ListPreference
 import androidx.preference.PreferenceFragmentCompat
 import kotlinx.android.synthetic.main.settings_activity.*
 
