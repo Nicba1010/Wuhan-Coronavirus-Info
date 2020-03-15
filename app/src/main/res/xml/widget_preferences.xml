@@ -1,0 +1,54 @@
+<PreferenceScreen xmlns:app="http://schemas.android.com/apk/res-auto">
+    <PreferenceCategory
+        app:iconSpaceReserved="false"
+        app:title="@string/general">
+        <dev.banic.wuhancoronavirusinfo.LayoutListPreference
+            app:entries="@array/theme_entries"
+            app:entryValues="@array/theme_values"
+            app:iconSpaceReserved="false"
+            app:key="@string/preference_key_theme"
+            app:title="@string/theme"
+            app:useSimpleSummaryProvider="true" />
+
+        <SwitchPreference
+            app:defaultValue="false"
+            app:iconSpaceReserved="false"
+            app:key="@string/preference_key_flag_mode"
+            app:title="@string/flag_mode"
+            app:useSimpleSummaryProvider="true" />
+    </PreferenceCategory>
+
+    <PreferenceCategory
+        app:iconSpaceReserved="false"
+        app:title="@string/data">
+        <ListPreference
+            app:entries="@array/data_source_entries"
+            app:entryValues="@array/data_source_values"
+            app:iconSpaceReserved="false"
+            app:key="@string/preference_key_data_source"
+            app:title="@string/data_source"
+            app:useSimpleSummaryProvider="true" />
+
+        <ListPreference
+            app:entries="@array/countries"
+            app:entryValues="@array/country_values"
+            app:iconSpaceReserved="false"
+            app:key="@string/preference_key_picked_country"
+            app:title="@string/picked_country"
+            app:useSimpleSummaryProvider="true" />
+
+        <SwitchPreference
+            app:defaultValue="true"
+            app:iconSpaceReserved="false"
+            app:key="@string/preference_key_confirmed_cases_visible"
+            app:title="@string/confirmed_cases_visible"
+            app:useSimpleSummaryProvider="true" />
+
+        <SwitchPreference
+            app:defaultValue="false"
+            app:iconSpaceReserved="false"
+            app:key="@string/preference_key_picked_country_active_cases_visible"
+            app:title="@string/picked_country_active_cases_visible"
+            app:useSimpleSummaryProvider="true" />
+    </PreferenceCategory>
+</PreferenceScreen>
