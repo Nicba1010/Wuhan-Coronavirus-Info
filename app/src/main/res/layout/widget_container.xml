@@ -4,27 +4,34 @@
     tools:showIn="@layout/coronavirus_info_appwidget_dark">
 
     <LinearLayout
-        android:id="@+id/ll_confirmed_suspected"
+        android:id="@+id/ll_confirmed_active_active_secondary"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_weight="1"
         android:orientation="vertical">
 
         <LinearLayout
-            android:id="@+id/ll_confirmed_suspected_labels"
+            android:id="@+id/ll_confirmed_active_active_secondary_labels"
             style="@style/style_ll_labels">
 
             <TextView
+                android:id="@+id/tv_confirmed_label"
                 style="@style/style_tv_case_count_label"
                 android:text="@string/confirmed_cases" />
 
             <TextView
+                android:id="@+id/tv_active_label"
                 style="@style/style_tv_case_count_label"
-                android:text="@string/suspected_cases" />
+                android:text="@string/active_cases" />
+
+            <TextView
+                android:id="@+id/tv_active_secondary_label"
+                style="@style/style_tv_case_count_label"
+                android:text="@string/active_secondary" />
         </LinearLayout>
 
         <LinearLayout
-            android:id="@+id/ll_confirmed_suspected_values"
+            android:id="@+id/ll_confirmed_active_active_secondary_values"
             style="@style/style_ll_values"
             android:gravity="top">
 
@@ -51,28 +58,51 @@
                     tools:text="10000" />
             </LinearLayout>
 
+            <ProgressBar
+                android:id="@+id/pb_active_cases"
+                style="@style/style_pb_case_count" />
+
+            <LinearLayout
+                android:id="@+id/ll_active"
+                style="@style/style_ll_value">
+
+                <TextView
+                    android:id="@+id/tv_active_delta"
+                    style="@style/style_tv_case_count.delta"
+                    android:text="@string/question_mark"
+                    android:textColor="?colorActive"
+                    tools:text="+1000 (from yesterday)" />
+
+                <TextView
+                    android:id="@+id/tv_active"
+                    style="@style/style_tv_case_count.current"
+                    android:text="@string/question_mark"
+                    android:textColor="?colorActive"
+                    tools:text="10000" />
+            </LinearLayout>
+
 
             <ProgressBar
-                android:id="@+id/pb_suspected_cases"
+                android:id="@+id/pb_active_secondary_cases"
                 style="@style/style_pb_case_count" />
 
 
             <LinearLayout
-                android:id="@+id/ll_suspected"
+                android:id="@+id/ll_active_secondary"
                 style="@style/style_ll_value">
 
                 <TextView
-                    android:id="@+id/tv_suspected_delta"
+                    android:id="@+id/tv_active_secondary_delta"
                     style="@style/style_tv_case_count.delta"
                     android:text="@string/question_mark"
-                    android:textColor="?colorSuspected"
+                    android:textColor="?colorActive"
                     tools:text="+10000 (from yesterday)" />
 
                 <TextView
-                    android:id="@+id/tv_suspected"
+                    android:id="@+id/tv_active_secondary"
                     style="@style/style_tv_case_count.current"
                     android:text="@string/question_mark"
-                    android:textColor="?colorSuspected"
+                    android:textColor="?colorActive"
                     tools:text="100000" />
             </LinearLayout>
         </LinearLayout>
@@ -98,12 +128,14 @@
             style="@style/style_ll_labels">
 
             <TextView
+                android:id="@+id/tv_deaths_label"
                 style="@style/style_tv_case_count_label"
-                android:text="@string/deaths" />
+                android:text="@string/death_cases" />
 
             <TextView
+                android:id="@+id/tv_recoveries_label"
                 style="@style/style_tv_case_count_label"
-                android:text="@string/recoveries" />
+                android:text="@string/recovery_cases" />
         </LinearLayout>
 
         <LinearLayout

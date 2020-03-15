@@ -43,7 +43,7 @@ class LayoutListPreference : ListPreference {
     constructor(context: Context) : this(context, null)
 
     override fun getValue(): String {
-        return (entryValues[realValues.indexOf(realValue)] ?: entryValues[0]).toString()
+        return (entryValues.getOrNull(realValues.indexOf(realValue))?: entryValues[0]).toString()
     }
 
     override fun getEntry(): CharSequence? {

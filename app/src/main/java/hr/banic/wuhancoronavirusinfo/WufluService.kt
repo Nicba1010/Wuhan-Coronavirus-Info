@@ -12,8 +12,6 @@ import java.util.concurrent.TimeUnit
 interface WufluService {
     @GET("john_hopkins_csse_data.json")
     fun getJohnHopkinsCSSEData(): Call<Disease>
-    @GET("qq_com_data.json")
-    fun getQQData(): Call<Disease>
 
     companion object {
         private val gson: Gson = GsonBuilder()

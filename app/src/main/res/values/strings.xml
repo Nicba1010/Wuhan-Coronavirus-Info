@@ -2,14 +2,15 @@
     <string name="app_name">2019-nCov Info (Wuhan Coronavirus)</string>
     <string name="widget_title">2019-nCov | \u00A9 2020, Nicba1010</string>
 
-    <string name="deaths">Deaths</string>
-    <string name="recoveries">Recoveries</string>
-    <string name="suspected_cases">Suspected Cases</string>
-    <string name="confirmed_cases">Confirmed Cases</string>
+    <string name="death_cases">Deaths</string>
+    <string name="recovery_cases">Recoveries</string>
+    <string name="confirmed_cases">Total Cases</string>
+    <string name="active_cases">Active</string>
+    <string name="active_secondary">Active (%1$s)</string>
 
     <string name="question_mark">\?</string>
     <string name="error">Error</string>
-    <string name="delta_amount">+~%1$d (from yesterday GMT+7)</string>
+    <string name="delta_amount">%1$s (from yesterday GMT+7)</string>
 
     <string name="last_updated_at">Updated at %1$s (tap to refresh)</string>
     <string name="error_occurred">An error occurred… (tap to refresh)</string>
@@ -31,9 +32,15 @@
 
     <string name="preference_key_theme">theme</string>
     <string name="preference_key_data_source">data_source</string>
+    <string name="preference_key_picked_country">picked_country</string>
     <string name="preference_key_flag_mode">flag_mode</string>
+    <string name="preference_key_confirmed_cases_visible">confirmed_cases_visible</string>
+    <string name="preference_key_picked_country_active_cases_visible">picked_country_active_cases_visible</string>
     <string name="flag_mode">Flag Mode</string>
     <string name="save">Save</string>
     <string name="data">Data</string>
     <string name="data_source">Data Source</string>
+    <string name="picked_country_active_cases_visible">Picked Country Active Cases Visible</string>
+    <string name="confirmed_cases_visible">Total Confirmed Cases Visible</string>
+    <string name="picked_country">Picked Country</string>
 </resources>

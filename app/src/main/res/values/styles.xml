@@ -17,6 +17,7 @@
         <item name="android:shadowDy">2</item>
         <item name="android:shadowRadius">1</item>
         <item name="colorConfirmed">@color/colorConfirmedDarkAmoled</item>
+        <item name="colorActive">@color/colorActiveDarkAmoled</item>
         <item name="colorSuspected">@color/colorSuspectedDarkAmoled</item>
         <item name="colorDeaths">@color/colorDeathsDarkAmoled</item>
         <item name="colorRecovered">@color/colorRecoveredDarkAmoled</item>
@@ -26,6 +27,7 @@
         <item name="colorBackground">@color/colorBackgroundDark</item>
         <item name="android:textColor">@color/textColorDark</item>
         <item name="colorConfirmed">@color/colorConfirmedDark</item>
+        <item name="colorActive">@color/colorActiveDark</item>
         <item name="colorSuspected">@color/colorSuspectedDark</item>
         <item name="colorDeaths">@color/colorDeathsDark</item>
         <item name="colorRecovered">@color/colorRecoveredDark</item>
@@ -35,6 +37,7 @@
         <item name="colorBackground">@color/colorBackgroundDarkAmoled</item>
         <item name="android:textColor">@color/textColorDarkAmoled</item>
         <item name="colorConfirmed">@color/colorConfirmedDarkAmoled</item>
+        <item name="colorActive">@color/colorActiveDarkAmoled</item>
         <item name="colorSuspected">@color/colorSuspectedDarkAmoled</item>
         <item name="colorDeaths">@color/colorDeathsDarkAmoled</item>
         <item name="colorRecovered">@color/colorRecoveredDarkAmoled</item>

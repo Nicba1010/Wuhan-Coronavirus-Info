@@ -64,6 +64,7 @@ class CoronavirusInfoWidgetProvider : AppWidgetProvider() {
             val countriesCollapseIntent = getViewUpdateIntent(
                 context, appWidgetId, ACTION_INFECTED_COUNTRIES_COLLAPSE
             )
+
             mapOf(
                 Pair(R.id.ll_root, configureIntent),
                 Pair(R.id.tv_last_updated, refreshIntent),
@@ -83,6 +84,8 @@ class CoronavirusInfoWidgetProvider : AppWidgetProvider() {
         appWidgetManager: AppWidgetManager,
         appWidgetId: Int
     ) {
+        setCounterVisibilities(views, context, appWidgetId)
+
         views.setTextViewText(
             R.id.tv_last_updated,
             context.getString(R.string.updating)
@@ -96,13 +99,13 @@ class CoronavirusInfoWidgetProvider : AppWidgetProvider() {
                 context.getString(R.string.currently_infected_countries_updating)
             )
         }
-        showProgressBars(views, true)
+        showProgressBars(context, views, appWidgetId, true)
         appWidgetManager.updateAppWidget(appWidgetId, views)
 
         getDataSource(context, appWidgetId)
             .enqueue(object : Callback<Disease> {
                 override fun onFailure(call: Call<Disease>, t: Throwable) {
-                    setAllTextViewError(views, context)
+                    setAllTextViewError(context, views, appWidgetId)
                     appWidgetManager.updateAppWidget(appWidgetId, views)
                     call.cancel()
                     Log.e("Retrofit", "getData()", t)
@@ -112,8 +115,10 @@ class CoronavirusInfoWidgetProvider : AppWidgetProvider() {
                     call: Call<Disease>,
                     response: Response<Disease>
                 ) {
-                    response.body()?.timestampedData?.maxBy { it.date }?.let { data ->
-                        updateCountTextViews(views, data, context)
+                    response.body()?.apply {
+                        this.timestampedData.sortByDescending { it.date }
+                    }?.timestampedData?.let { data ->
+                        updateCountTextViews(context, views, appWidgetId, data)
                         updateInfectedCountriesTextViews(data, context, views, appWidgetId)
 
                         views.setTextViewText(
@@ -125,15 +130,34 @@ class CoronavirusInfoWidgetProvider : AppWidgetProvider() {
                         context.getString(R.string.error_occurred)
                     )
 
-                    showProgressBars(views, false)
+                    showProgressBars(context, views, appWidgetId, false)
                     appWidgetManager.updateAppWidget(appWidgetId, views)
                 }
             })
     }
 
+    private fun setCounterVisibilities(views: RemoteViews, context: Context, appWidgetId: Int) {
+        if (!getConfirmedCasesVisible(context, appWidgetId)) {
+            views.setViewVisibility(R.id.tv_confirmed_label, View.GONE)
+            views.setViewVisibility(R.id.pb_confirmed_cases, View.GONE)
+            views.setViewVisibility(R.id.ll_confirmed, View.GONE)
+        } else {
+            views.setViewVisibility(R.id.tv_confirmed_label, View.VISIBLE)
+        }
+
+        if (!getPickedCountryActiveCasesVisible(context, appWidgetId)) {
+            views.setViewVisibility(R.id.tv_active_secondary_label, View.GONE)
+            views.setViewVisibility(R.id.pb_active_secondary_cases, View.GONE)
+            views.setViewVisibility(R.id.ll_active_secondary, View.GONE)
+        } else {
+            views.setViewVisibility(R.id.tv_active_secondary_label, View.VISIBLE)
+        }
+    }
+
     private fun setAllTextViewError(
+        context: Context,
         views: RemoteViews,
-        context: Context
+        appWidgetId: Int
     ) {
         views.setTextViewText(
             R.id.tv_last_updated,
@@ -149,14 +173,14 @@ class CoronavirusInfoWidgetProvider : AppWidgetProvider() {
             )
         }
 
-        showProgressBars(views, false)
+        showProgressBars(context, views, appWidgetId, false)
         arrayOf(
-            R.id.tv_confirmed,
-            R.id.tv_suspected,
+            R.id.tv_active,
+            R.id.tv_active_secondary,
             R.id.tv_deaths,
             R.id.tv_recoveries,
-            R.id.tv_confirmed_delta,
-            R.id.tv_suspected_delta,
+            R.id.tv_active_delta,
+            R.id.tv_active_secondary_delta,
             R.id.tv_deaths_delta,
             R.id.tv_recoveries_delta
         ).forEach {
@@ -165,13 +189,14 @@ class CoronavirusInfoWidgetProvider : AppWidgetProvider() {
     }
 
     private fun updateInfectedCountriesTextViews(
-        data: Disease.TimestampedData,
+        data: List<Disease.TimestampedData>,
         context: Context,
         views: RemoteViews,
         appWidgetId: Int
     ) {
+        val latestData: Disease.TimestampedData = data.firstOrNull() ?: Disease.TimestampedData()
         val flagMode: Boolean = getFlagMode(context, appWidgetId)
-        val infectedCountries = data.areas.filter {
+        val infectedCountries = latestData.areas.filter {
             it.confirmed > 0
         }.sortedByDescending {
             it.confirmed
@@ -199,56 +224,99 @@ class CoronavirusInfoWidgetProvider : AppWidgetProvider() {
     }
 
     private fun updateCountTextViews(
+        context: Context,
         views: RemoteViews,
-        data: Disease.TimestampedData,
-        context: Context
+        appWidgetId: Int,
+        data: List<Disease.TimestampedData>
     ) {
-        views.setTextViewText(R.id.tv_confirmed, data.confirmedStr)
-        views.setTextViewText(R.id.tv_suspected, data.suspectedStr)
-        views.setTextViewText(R.id.tv_deaths, data.deathsStr)
-        views.setTextViewText(R.id.tv_recoveries, data.recoveriesStr)
+        val latestData: Disease.TimestampedData = data.firstOrNull() ?: Disease.TimestampedData()
+        val deltaData: Disease.TimestampedData = latestData.deltasFrom(
+            data.getOrNull(1) ?: Disease.TimestampedData()
+        )
+
+        views.setTextViewText(R.id.tv_confirmed, latestData.confirmedStr)
+        views.setTextViewText(R.id.tv_active, latestData.activeStr)
+        views.setTextViewText(R.id.tv_deaths, latestData.deathsStr)
+        views.setTextViewText(R.id.tv_recoveries, latestData.recoveriesStr)
+
         views.setTextViewText(
             R.id.tv_confirmed_delta,
-            data.approximateStats?.deltas?.confirmed?.let {
+            deltaData.confirmedSignedStr.let {
                 context.getString(R.string.delta_amount, it)
-            } ?: "N/A"
+            }
         )
         views.setTextViewText(
-            R.id.tv_suspected_delta,
-            data.approximateStats?.deltas?.suspected?.let {
+            R.id.tv_active_delta,
+            deltaData.activeSignedStr.let {
                 context.getString(R.string.delta_amount, it)
-            } ?: "N/A"
+            }
         )
         views.setTextViewText(
             R.id.tv_deaths_delta,
-            data.approximateStats?.deltas?.deaths?.let {
+            deltaData.deathsSignedStr.let {
                 context.getString(R.string.delta_amount, it)
-            } ?: "N/A"
+            }
         )
         views.setTextViewText(
             R.id.tv_recoveries_delta,
-            data.approximateStats?.deltas?.recoveries?.let {
+            deltaData.recoveriesSignedStr.let {
                 context.getString(R.string.delta_amount, it)
-            } ?: "N/A"
+            }
+        )
+
+
+        val pickedCountry = getPickedCountry(context, appWidgetId)
+        val pickedArea = latestData.areas.find { it.name == pickedCountry }
+        val pickedAreaDelta = deltaData.areas.find { it.name == pickedCountry }
+
+        views.setTextViewText(
+            R.id.tv_active_secondary_label,
+            context.getString(
+                R.string.active_secondary, pickedCountry
+            )
+        )
+        views.setTextViewText(R.id.tv_active_secondary, pickedArea?.activeStr ?: "N/A")
+        views.setTextViewText(
+            R.id.tv_active_secondary_delta,
+            deltaData.activeSignedStr.let {
+                context.getString(
+                    R.string.delta_amount,
+                    pickedAreaDelta?.activeSignedStr ?: "N/A"
+                )
+            }
         )
     }
 
     fun showProgressBars(
+        context: Context,
         views: RemoteViews,
+        appWidgetId: Int,
         show: Boolean,
-        tvs: Array<Int> = arrayOf(
+        tvs: MutableList<Int> = mutableListOf(
             R.id.ll_confirmed,
-            R.id.ll_suspected,
+            R.id.ll_active,
+            R.id.ll_active_secondary,
             R.id.ll_deaths,
             R.id.ll_recoveries
         ),
-        pbs: Array<Int> = arrayOf(
+        pbs: MutableList<Int> = mutableListOf(
             R.id.pb_confirmed_cases,
-            R.id.pb_suspected_cases,
+            R.id.pb_active_cases,
+            R.id.pb_active_secondary_cases,
             R.id.pb_deaths,
             R.id.pb_recoveries
         )
     ) {
+        if (!getConfirmedCasesVisible(context, appWidgetId)) {
+            tvs.remove(R.id.ll_confirmed)
+            pbs.remove(R.id.pb_confirmed_cases)
+        }
+        if (!getPickedCountryActiveCasesVisible(context, appWidgetId)) {
+            tvs.remove(R.id.ll_active_secondary)
+            pbs.remove(R.id.pb_active_secondary_cases)
+        }
+
+
         tvs.forEach {
             views.setViewVisibility(it, if (show) View.GONE else View.VISIBLE)
         }
@@ -303,16 +371,43 @@ class CoronavirusInfoWidgetProvider : AppWidgetProvider() {
             )
         }
 
+        fun getConfirmedCasesVisible(context: Context, appWidgetId: Int): Boolean {
+            val sp: SharedPreferences = context.getSharedPreferences(appWidgetId)
+
+            return sp.getBoolean(
+                context.getString(R.string.preference_key_confirmed_cases_visible),
+                true
+            )
+        }
+
+        fun getPickedCountryActiveCasesVisible(context: Context, appWidgetId: Int): Boolean {
+            val sp: SharedPreferences = context.getSharedPreferences(appWidgetId)
+
+            return sp.getBoolean(
+                context.getString(R.string.preference_key_picked_country_active_cases_visible),
+                false
+            )
+        }
+
         fun getDataSource(context: Context, appWidgetId: Int): Call<Disease> {
             val sp: SharedPreferences = context.getSharedPreferences(appWidgetId)
 
-            return sp.getString(context.getString(R.string.preference_key_data_source), null)?.let {
-                when (it) {
-                    "jhcsse" -> WufluService.instance.getJohnHopkinsCSSEData()
-                    "qq" -> WufluService.instance.getQQData()
-                    else -> WufluService.instance.getQQData()
-                }
-            } ?: WufluService.instance.getQQData()
+            return when (sp.getString(
+                context.getString(R.string.preference_key_data_source),
+                null
+            )) {
+                "jhcsse" -> WufluService.instance.getJohnHopkinsCSSEData()
+                else -> WufluService.instance.getJohnHopkinsCSSEData()
+            }
+        }
+
+        fun getPickedCountry(context: Context, appWidgetId: Int): String {
+            val sp: SharedPreferences = context.getSharedPreferences(appWidgetId)
+
+            return sp.getString(
+                context.getString(R.string.preference_key_picked_country),
+                null
+            ) ?: Locale.getDefault().country
         }
 
         private fun getConfigureIntent(context: Context, appWidgetId: Int): PendingIntent {

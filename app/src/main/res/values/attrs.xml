@@ -2,6 +2,7 @@
 <resources>
     <attr name="colorBackground" format="color" />
     <attr name="colorConfirmed" format="color" />
+    <attr name="colorActive" format="color" />
     <attr name="colorSuspected" format="color" />
     <attr name="colorDeaths" format="color" />
     <attr name="colorRecovered" format="color" />
