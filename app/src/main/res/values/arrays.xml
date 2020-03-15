@@ -11,4 +11,14 @@
         <item>@layout/coronavirus_info_appwidget_amoled</item>
         <item>@layout/coronavirus_info_appwidget_light</item>
     </array>
+    <!-- Data Source Preference -->
+    <string-array name="data_source_entries">
+        <item>QQ.com</item>
+        <item>John Hopkins CSSE</item>
+    </string-array>
+
+    <string-array name="data_source_values">
+        <item>qq</item>
+        <item>jhcsse</item>
+    </string-array>
 </resources>

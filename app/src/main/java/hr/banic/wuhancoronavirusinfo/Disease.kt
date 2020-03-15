@@ -4,6 +4,7 @@ import com.google.gson.annotations.SerializedName
 import java.util.*
 
 data class Disease(
+    @SerializedName("timestamped_data")
     val timestampedData: List<TimestampedData> = listOf()
 ) {
     data class TimestampedData(

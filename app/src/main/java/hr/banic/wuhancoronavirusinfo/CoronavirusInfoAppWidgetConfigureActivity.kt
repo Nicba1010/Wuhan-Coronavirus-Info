@@ -81,21 +81,6 @@ class CoronavirusInfoAppWidgetConfigureActivity : AppCompatActivity() {
             )
 
             setPreferencesFromResource(R.xml.widget_preferences, rootKey)
-
-            preferenceManager.findPreference<ListPreference>(
-                getString(R.string.preference_key_theme)
-            )?.setOnPreferenceChangeListener { preference, newValue ->
-                (preference as ListPreference).entryValues.indexOf(newValue).let { index ->
-                    val layouts = resources.obtainTypedArray(R.array.theme_values)
-                    val value = layouts.getResourceId(index, -1)
-                    layouts.recycle()
-
-                    preference.preferenceDataStore?.putInt(preference.key, value) ?: preferenceManager.sharedPreferences.edit().apply {
-                        putInt(preference.key, value)
-                    }.apply()
-                }
-                true
-            }
         }
     }
 }

@@ -17,4 +17,16 @@
             app:title="@string/flag_mode"
             app:useSimpleSummaryProvider="true" />
     </PreferenceCategory>
+
+    <PreferenceCategory
+        app:iconSpaceReserved="false"
+        app:title="@string/data">
+        <ListPreference
+            app:entries="@array/data_source_entries"
+            app:entryValues="@array/data_source_values"
+            app:iconSpaceReserved="false"
+            app:key="@string/preference_key_data_source"
+            app:title="@string/data_source"
+            app:useSimpleSummaryProvider="true" />
+    </PreferenceCategory>
 </PreferenceScreen>

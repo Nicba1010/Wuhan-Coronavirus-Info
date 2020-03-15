@@ -99,8 +99,7 @@ class CoronavirusInfoWidgetProvider : AppWidgetProvider() {
         showProgressBars(views, true)
         appWidgetManager.updateAppWidget(appWidgetId, views)
 
-        WufluService.instance
-            .getQQData()
+        getDataSource(context, appWidgetId)
             .enqueue(object : Callback<Disease> {
                 override fun onFailure(call: Call<Disease>, t: Throwable) {
                     setAllTextViewError(views, context)
@@ -210,31 +209,27 @@ class CoronavirusInfoWidgetProvider : AppWidgetProvider() {
         views.setTextViewText(R.id.tv_recoveries, data.recoveriesStr)
         views.setTextViewText(
             R.id.tv_confirmed_delta,
-            context.getString(
-                R.string.delta_amount,
-                data.approximateStats?.deltas?.confirmed ?: -1
-            )
+            data.approximateStats?.deltas?.confirmed?.let {
+                context.getString(R.string.delta_amount, it)
+            } ?: "N/A"
         )
         views.setTextViewText(
             R.id.tv_suspected_delta,
-            context.getString(
-                R.string.delta_amount,
-                data.approximateStats?.deltas?.suspected ?: -1
-            )
+            data.approximateStats?.deltas?.suspected?.let {
+                context.getString(R.string.delta_amount, it)
+            } ?: "N/A"
         )
         views.setTextViewText(
             R.id.tv_deaths_delta,
-            context.getString(
-                R.string.delta_amount,
-                data.approximateStats?.deltas?.deaths ?: -1
-            )
+            data.approximateStats?.deltas?.deaths?.let {
+                context.getString(R.string.delta_amount, it)
+            } ?: "N/A"
         )
         views.setTextViewText(
             R.id.tv_recoveries_delta,
-            context.getString(
-                R.string.delta_amount,
-                data.approximateStats?.deltas?.recoveries ?: -1
-            )
+            data.approximateStats?.deltas?.recoveries?.let {
+                context.getString(R.string.delta_amount, it)
+            } ?: "N/A"
         )
     }
 
@@ -306,6 +301,18 @@ class CoronavirusInfoWidgetProvider : AppWidgetProvider() {
                 context.getString(R.string.preference_key_flag_mode),
                 false
             )
+        }
+
+        fun getDataSource(context: Context, appWidgetId: Int): Call<Disease> {
+            val sp: SharedPreferences = context.getSharedPreferences(appWidgetId)
+
+            return sp.getString(context.getString(R.string.preference_key_data_source), null)?.let {
+                when (it) {
+                    "jhcsse" -> WufluService.instance.getJohnHopkinsCSSEData()
+                    "qq" -> WufluService.instance.getQQData()
+                    else -> WufluService.instance.getQQData()
+                }
+            } ?: WufluService.instance.getQQData()
         }
 
         private fun getConfigureIntent(context: Context, appWidgetId: Int): PendingIntent {

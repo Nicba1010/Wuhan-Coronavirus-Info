@@ -30,7 +30,10 @@
     <string name="theme">Theme</string>
 
     <string name="preference_key_theme">theme</string>
+    <string name="preference_key_data_source">data_source</string>
     <string name="preference_key_flag_mode">flag_mode</string>
     <string name="flag_mode">Flag Mode</string>
     <string name="save">Save</string>
+    <string name="data">Data</string>
+    <string name="data_source">Data Source</string>
 </resources>
